@@ -1,0 +1,36 @@
+name: Multiplication C Project CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install GCC
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Build application
+        run: |
+          gcc -c mul.c -o mul.o
+          gcc -c main.c -o main.o
+          gcc mul.o main.o -o app
+
+      - name: Run main program
+        run: ./app
+
+      - name: Build tests
+        run: |
+          gcc -c mul.c -o mul.o
+          gcc -c test.c -o test.o
+          gcc mul.o test.o -o test_app
+
+      - name: Run tests
+        run: ./test_app
